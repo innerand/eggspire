@@ -1,0 +1,5 @@
+# You can get these from https://apps.twitter.com
+access_key = "<Twitter Access Token>"
+access_sec = "<Twitter Access Token Secret>"
+con_key = "<Twitter Consumer Key (API Key)>"
+con_sec = "<Twitter Consumer Secret (API Secret)>"

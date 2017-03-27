@@ -1,0 +1,18 @@
+[package]
+name = "eggspire"
+version = "1.0.0"
+authors = ["Andreas Innerlohninger <innerand@nxa.at>"]
+publish = false
+
+[dependencies]
+clap = "2.22.1"
+
+egg-mode = "0.8.0"
+chrono = "0.3.0"
+
+log = "0.3.7"
+env_logger = "0.4.2"
+
+serde= "0.9.11"
+serde_derive = "0.9.11"
+toml = "0.3.1"
