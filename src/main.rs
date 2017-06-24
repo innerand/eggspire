@@ -81,7 +81,7 @@ fn main() {
                 use egg_mode::error::Error::*;
                 match e {
                     RateLimit(utc) => {
-                        let sleep_s = UTC::now().timestamp() - utc as i64;
+                        let sleep_s = Utc::now().timestamp() - utc as i64;
                         if sleep_s > 0 {
                             cprintln!(!conf.quiet,
                                       "The Twitter API rate limit was reached.\
