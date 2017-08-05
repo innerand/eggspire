@@ -69,7 +69,7 @@ fn main() {
                        tl.max_id,
                        tl.min_id);
                 for status in &tweets {
-                    if status.expired(conf.span) && status.faved() {
+                    if status.expired(conf.span) && !status.faved() {
                         to_delete.push(status.id);
                     }
                 }

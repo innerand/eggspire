@@ -95,12 +95,12 @@ pub trait Eggspire {
 }
 
 impl Eggspire for egg_mode::tweet::Tweet {
-    /// Returns true if a tweet is older than span (in seconds) and not faved
+    /// Returns true if a tweet is older than span (in seconds)
     fn expired(&self, span: i64) -> bool {
         (Utc::now().timestamp() - self.created_at.timestamp()) > span
     }
 
-    /// Returns true if the tweet is favorited by the authenticated user or the request fails
+    /// Returns true if the tweet is faved by the authenticated user or the request fails
     fn faved(&self) -> bool {
         if let Some(faved) = self.favorited {
            faved
