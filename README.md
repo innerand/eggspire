@@ -7,7 +7,7 @@ account. (The main aim here was to gain some rust experience.)
 ## Usage
 ```bash
 ./eggspire --help
-eggspire 1.0.0
+eggspire 1.0.2
 
 Deletes Tweets that are expired and not faved by the authenticated user.
 A Tweet has expired if it is older than a given timespan.

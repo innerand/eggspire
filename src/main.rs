@@ -1,16 +1,19 @@
-extern crate clap; // Argparser
+extern crate clap;          // Argparser
 #[macro_use]
-extern crate log; // Log
-extern crate env_logger; // Log
+extern crate log;           // Log
+extern crate env_logger;    // Log
 #[macro_use]
-extern crate serde_derive; // Parse config file
-extern crate serde; // Parse Config file
-extern crate toml; // Parse config file
-extern crate egg_mode; // Twitter API
-extern crate chrono; // Date/Time
+extern crate serde_derive;  // Parse config file
+extern crate serde;         // Parse Config file
+extern crate toml;          // Parse config file
+extern crate egg_mode;      // Twitter API
+extern crate chrono;        // Date/Time
+extern crate futures;       // Async IO
+extern crate tokio_core;    // Async IO
 
 use egg_mode::{KeyPair, Token, verify_tokens, tweet};
 use chrono::prelude::*;
+use tokio_core::reactor::Core;
 
 #[macro_use]
 mod util;
@@ -45,8 +48,13 @@ fn main() {
         consumer: con_token,
         access: access_token,
     };
+
+    let mut core= Core::new().unwrap();
+    let handle = core.handle();
+
+
     let user;
-    match verify_tokens(&token) {
+    match core.run(verify_tokens(&token, &handle)) {
         Err(e) => {
             error!("The authentication failed.");
             debug!("{:?}", e);
@@ -57,12 +65,12 @@ fn main() {
     info!("Authenticated as User: {} (Id: {})", user.name, user.id);
 
     // Get timeline of authenticated user
-    let mut tl = tweet::user_timeline(user.id, true, true, &token).with_page_size(100);
+    let mut tl = tweet::user_timeline(user.id, true, true, &token, &handle).with_page_size(100);
 
     // Get IDs of expired tweets
     let mut to_delete = Vec::<u64>::new();
     loop {
-        match tl.older(None) {
+        match core.run(tl.older(None)) {
             Ok(tweets) => {
                 trace!("tl count: {:?}, max_id: {:?}, min_id: {:?}",
                        tl.count,
@@ -106,7 +114,7 @@ fn main() {
     if !conf.dryrun && to_delete.len() > 0 {
         let mut ctr = 0;
         for tweet in to_delete {
-            if let Ok(deleted) = egg_mode::tweet::delete(tweet, &token) {
+            if let Ok(deleted) = core.run(egg_mode::tweet::delete(tweet, &token, &handle)) {
                 info!("Deleted: {}", deleted.text);
                 ctr += 1;
             } else {

@@ -10,7 +10,7 @@ pub fn get_conf() -> Conf {
         .about("\nDeletes Tweets that are expired and not faved by the authenticated user.\
                 \nA Tweet has expired if it is older than a given timespan.\
                 \nCAUTION: Will delete Tweets without confirmation!")
-        .version("0.1.0")
+        .version("1.0.2")
         //.author("Innerand <innerand@nxa.at>")
         .arg(Arg::with_name("file")
              .long("auth-file")
