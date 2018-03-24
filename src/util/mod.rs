@@ -58,6 +58,7 @@ impl Auth {
         let mut buf = String::with_capacity(200);
         file.read_to_string(&mut buf)?;
         let auth: Self = toml::from_str(&buf)?;
+
         Ok(auth)
     }
 }
@@ -95,6 +96,7 @@ pub trait Eggspire {
 }
 
 impl Eggspire for egg_mode::tweet::Tweet {
+
     /// Returns true if a tweet is older than span (in seconds)
     fn expired(&self, span: i64) -> bool {
         (Utc::now().timestamp() - self.created_at.timestamp()) > span

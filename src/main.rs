@@ -23,7 +23,7 @@ use util::{Eggspire, Auth, args};
 fn main() {
 
     // Init logger and set default log level (Error)
-    util::log::init(::log::LogLevelFilter::Error);
+    util::log::init(::log::LevelFilter::Error);
     // Get configuration from arg parser
     let mut conf = args::get_conf();
 
