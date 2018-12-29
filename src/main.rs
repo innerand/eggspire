@@ -9,11 +9,10 @@ extern crate toml;          // Parse config file
 extern crate egg_mode;      // Twitter API
 extern crate chrono;        // Date/Time
 extern crate futures;       // Async IO
-extern crate tokio_core;    // Async IO
+extern crate tokio;         // Async IO
 
 use egg_mode::{KeyPair, Token, verify_tokens, tweet};
 use chrono::prelude::*;
-use tokio_core::reactor::Core;
 
 #[macro_use]
 mod util;
@@ -49,12 +48,9 @@ fn main() {
         access: access_token,
     };
 
-    let mut core= Core::new().unwrap();
-    let handle = core.handle();
-
 
     let user;
-    match core.run(verify_tokens(&token, &handle)) {
+    match tokio::runtime::current_thread::block_on_all(verify_tokens(&token)) {
         Err(e) => {
             error!("The authentication failed.");
             debug!("{:?}", e);
@@ -65,13 +61,16 @@ fn main() {
     info!("Authenticated as User: {} (Id: {})", user.name, user.id);
 
     // Get timeline of authenticated user
-    let mut tl = tweet::user_timeline(user.id, true, true, &token, &handle).with_page_size(100);
+    let mut tl = tweet::user_timeline(user.id, true, true, &token).with_page_size(100);
 
     // Get IDs of expired tweets
     let mut to_delete = Vec::<u64>::new();
-    loop {
-        match core.run(tl.older(None)) {
-            Ok(tweets) => {
+    // loop {
+        match tokio::runtime::current_thread::block_on_all(tl.older(None)) {
+            Ok((_,_)) => {}
+            /*
+            Ok((tl,tweets)) => {
+
                 trace!("tl count: {:?}, max_id: {:?}, min_id: {:?}",
                        tl.count,
                        tl.max_id,
@@ -85,6 +84,7 @@ fn main() {
                     break;
                 } // reached last tweet
             }
+            */
             Err(e) => {
                 use egg_mode::error::Error::*;
                 match e {
@@ -107,9 +107,9 @@ fn main() {
 
             }
         }
-    }
+    //}
     cprintln!(!conf.quiet, "Found {} expired tweets.", to_delete.len());
-
+/*
     // Delete expired tweets
     if !conf.dryrun && to_delete.len() > 0 {
         let mut ctr = 0;
@@ -123,4 +123,5 @@ fn main() {
         }
         cprintln!(!conf.quiet, "Deleted {} expired tweets.", ctr);
     }
+*/
 }

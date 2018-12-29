@@ -6,10 +6,9 @@ publish = false
 
 [dependencies]
 clap = "2.27.1"
+tokio="0.1.13"
 
 futures="0.1.18"
-tokio-core="0.1.12"
-egg-mode = "0.11"
 chrono = "0.4.0"
 
 log = "0.4.1"
@@ -18,3 +17,7 @@ env_logger = "0.5.3"
 serde= "1.0.27"
 serde_derive = "1.0.27"
 toml = "0.4.5"
+
+[dependencies.egg-mode]
+git = "https://github.com/QuietMisdreavus/twitter-rs"
+ref = "8491554282f5e8a43f9144208198b756ce5ed07a"
