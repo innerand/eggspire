@@ -209,7 +209,7 @@ dependencies = [
 [[package]]
 name = "egg-mode"
 version = "0.12.0"
-source = "git+https://github.com/QuietMisdreavus/twitter-rs#8491554282f5e8a43f9144208198b756ce5ed07a"
+source = "git+https://github.com/QuietMisdreavus/twitter-rs?rev=8491554282f5e8a43f9144208198b756ce5ed07a#8491554282f5e8a43f9144208198b756ce5ed07a"
 dependencies = [
  "base64 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "chrono 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -236,7 +236,7 @@ version = "1.0.2"
 dependencies = [
  "chrono 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.31.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "egg-mode 0.12.0 (git+https://github.com/QuietMisdreavus/twitter-rs)",
+ "egg-mode 0.12.0 (git+https://github.com/QuietMisdreavus/twitter-rs?rev=8491554282f5e8a43f9144208198b756ce5ed07a)",
  "env_logger 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures 0.1.25 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1368,7 +1368,7 @@ dependencies = [
 "checksum crossbeam-utils 0.6.3 (registry+https://github.com/rust-lang/crates.io-index)" = "41ee4864f4797060e52044376f7d107429ce1fb43460021b126424b7180ee21a"
 "checksum crypto-mac 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "779015233ac67d65098614aec748ac1c756ab6677fa2e14cf8b37c08dfed1198"
 "checksum digest 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)" = "e5b29bf156f3f4b3c4f610a25ff69370616ae6e0657d416de22645483e72af0a"
-"checksum egg-mode 0.12.0 (git+https://github.com/QuietMisdreavus/twitter-rs)" = "<none>"
+"checksum egg-mode 0.12.0 (git+https://github.com/QuietMisdreavus/twitter-rs?rev=8491554282f5e8a43f9144208198b756ce5ed07a)" = "<none>"
 "checksum env_logger 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)" = "0561146661ae44c579e993456bc76d11ce1e0c7d745e57b2fa7146b6e49fa2ad"
 "checksum fake-simd 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)" = "e88a8acf291dafb59c2d96e8f59828f3838bb1a70398823ade51a84de6a6deed"
 "checksum fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)" = "2fad85553e09a6f881f739c29f0b00b0f01357c743266d478b68951ce23285f3"

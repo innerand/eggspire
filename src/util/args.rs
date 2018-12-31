@@ -1,5 +1,5 @@
 use clap::{App, Arg};
-use util::Conf;
+use crate::util::Conf;
 
 const SECONDS_IN_WEEK: i64 = 604800;
 

@@ -3,6 +3,7 @@ name = "eggspire"
 version = "1.0.2"
 authors = ["Andreas Innerlohninger <innerand@nxa.at>"]
 publish = false
+edition = "2018"
 
 [dependencies]
 clap = "2.27.1"
@@ -20,4 +21,4 @@ toml = "0.4.5"
 
 [dependencies.egg-mode]
 git = "https://github.com/QuietMisdreavus/twitter-rs"
-ref = "8491554282f5e8a43f9144208198b756ce5ed07a"
+rev = "8491554282f5e8a43f9144208198b756ce5ed07a"
