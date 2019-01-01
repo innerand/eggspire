@@ -4,7 +4,9 @@
 
 use egg_mode::{KeyPair, Token, verify_tokens, tweet};
 use crate::util::{Eggspire, Auth, args};
-use tokio::runtime::current_thread::block_on_all;
+use tokio::runtime::current_thread::{block_on_all};
+use futures::future::Future;
+
 
 fn main() {
     // Init logger and set default log level (Error)
@@ -53,6 +55,8 @@ fn main() {
     let mut current_id :Option<u64> = None;         // Track processed IDs
     let mut to_delete = Vec::<u64>::new();          // IDs  of tweets to remove
 
+    let mut rt = tokio::runtime::Runtime::new().unwrap();
+
     loop {
         // Get new timeline struct
         if tl.is_none() {
@@ -74,9 +78,14 @@ fn main() {
                 debug!("new_tl count: {:?}, max_id: {:?}, min_id: {:?}",
                        new_tl.count, new_tl.max_id, new_tl.min_id);
 
-                for status in &tweets {
-                    if status.expired(conf.span) && !status.faved() {
-                        to_delete.push(status.id);
+                for tweet in &tweets {
+                    if tweet.expired(conf.span) && !tweet.faved(){
+                        to_delete.push(tweet.id);
+                        if !conf.dryrun{
+                            rt.spawn(tweet::delete(tweet.id, &token)
+                                     .map(|_| () )
+                                     .map_err(|_| () ));
+                        }
                     }
                 }
 
@@ -99,11 +108,12 @@ fn main() {
         }
     }
 
+    rt.shutdown_on_idle().wait().unwrap();
     cprintln!(!conf.quiet, "Found {} expired tweets.", to_delete.len());
 
     // Delete expired tweets
     //--------------------------------------------------------------------------
-
+/*
     if !conf.dryrun && to_delete.len() > 0 {
         let mut ctr = 0;
         for tweet in to_delete {
@@ -116,7 +126,7 @@ fn main() {
         }
         cprintln!(!conf.quiet, "Deleted {} expired tweets.", ctr);
     }
-
+*/
 }
 
 /// Print the error message and exit
