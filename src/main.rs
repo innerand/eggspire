@@ -2,6 +2,7 @@
 #[macro_use] extern crate serde_derive;
 #[macro_use] mod util;
 
+use chrono::prelude::*;
 use egg_mode::{KeyPair, Token, verify_tokens, tweet};
 use crate::util::{Eggspire, Auth, args};
 use tokio::runtime::current_thread::{block_on_all};
@@ -11,10 +12,11 @@ use futures::future::Future;
 fn main() {
     // Init logger and set default log level (Error)
     //--------------------------------------------------------------------------
-    util::log::init(::log::LevelFilter::Debug);
-    // Get configuration from arg parser
-    let mut conf = args::get_conf();
+    util::log::init(::log::LevelFilter::Error);
 
+    // Get configuration from arg parser
+    //--------------------------------------------------------------------------
+    let mut conf = args::get_conf();
     debug!("{:#?}", conf);
 
     // Get auth credentials from configuration file
@@ -53,10 +55,9 @@ fn main() {
     //--------------------------------------------------------------------------
     let mut tl : Option<tweet::Timeline> = None;    // User Timeline
     let mut current_id :Option<u64> = None;         // Track processed IDs
-    let mut to_delete = Vec::<u64>::new();          // IDs  of tweets to remove
+    let mut expired_ctr = 0;
 
     let mut rt = tokio::runtime::Runtime::new().unwrap();
-
     loop {
         // Get new timeline struct
         if tl.is_none() {
@@ -80,11 +81,18 @@ fn main() {
 
                 for tweet in &tweets {
                     if tweet.expired(conf.span) && !tweet.faved(){
-                        to_delete.push(tweet.id);
+                        expired_ctr += 1;
                         if !conf.dryrun{
+                            let id = tweet.id;
                             rt.spawn(tweet::delete(tweet.id, &token)
-                                     .map(|_| () )
-                                     .map_err(|_| () ));
+                                     .map(|response| {
+                                          debug!("Deleted tweet {:}", response.id);
+                                          ()
+                                     })
+                                     .map_err(move |err| {
+                                             error!("Failed to delete tweet({:}): {:?}", id, err);
+                                             ()
+                                     }));
                         }
                     }
                 }
@@ -99,34 +107,26 @@ fn main() {
             }
 
             Err(e) => {
-                // tl = None;
+                tl = None;
+
+                use egg_mode::error::Error::*;
                 match e {
-                    // TODO: Error handling
-                    _ => unhandeled_error(Box::new(e))
+                    RateLimit(utc) => {
+                        let sleep_s = Utc::now().timestamp() - utc as i64;
+                        cprintln!(!conf.quiet,
+                                  "Rate limit has been reached.\
+                                   Sleeping for {} seconds.", sleep_s);
+                        std::thread::sleep(std::time::Duration::from_secs(sleep_s as u64));
+                        // TODO: Pause runtime
+                    },
+                    _ => unhandeled_error(Box::new(e)),
                 }
             }
         }
     }
 
+    cprintln!(!conf.quiet, "Found {} expired tweets.", expired_ctr);
     rt.shutdown_on_idle().wait().unwrap();
-    cprintln!(!conf.quiet, "Found {} expired tweets.", to_delete.len());
-
-    // Delete expired tweets
-    //--------------------------------------------------------------------------
-/*
-    if !conf.dryrun && to_delete.len() > 0 {
-        let mut ctr = 0;
-        for tweet in to_delete {
-            if let Ok(deleted) = block_on_all(egg_mode::tweet::delete(tweet, &token)) {
-                info!("Deleted: {}", deleted.text);
-                ctr += 1;
-            } else {
-                error!("Deletion of tweet with id {} failed.", tweet);
-            }
-        }
-        cprintln!(!conf.quiet, "Deleted {} expired tweets.", ctr);
-    }
-*/
 }
 
 /// Print the error message and exit
