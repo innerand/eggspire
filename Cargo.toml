@@ -20,5 +20,7 @@ serde_derive = "1.0.27"
 toml = "0.4.5"
 
 [dependencies.egg-mode]
-git = "https://github.com/QuietMisdreavus/twitter-rs"
-rev = "8491554282f5e8a43f9144208198b756ce5ed07a"
+# Upstream has a bug, set back to crate egg-mode if fixed
+# (https://github.com/QuietMisdreavus/twitter-rs/pull/54)
+git = "https://github.com/innerand/twitter-rs"
+rev = "a9fe0e1cd40afe575efa1a00211664044a89c841"
