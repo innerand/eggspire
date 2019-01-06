@@ -1,6 +1,6 @@
 [package]
 name = "eggspire"
-version = "1.0.3"
+version = "1.1.0"
 authors = ["Andreas Innerlohninger <innerand@nxa.at>"]
 publish = false
 edition = "2018"
