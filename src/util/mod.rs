@@ -37,8 +37,8 @@ impl Conf {
         let auth = Auth::from_file(&self.file)?;
 
         self.token = egg_mode::Token::Access {
-            consumer: egg_mode::KeyPair::new(auth.access_key, auth.access_sec),
-            access: egg_mode::KeyPair::new(auth.con_key, auth.con_sec),
+            access: egg_mode::KeyPair::new(auth.access_key, auth.access_sec),
+            consumer: egg_mode::KeyPair::new(auth.con_key, auth.con_sec),
         };
 
         Ok(())
