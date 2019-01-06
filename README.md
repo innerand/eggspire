@@ -1,35 +1,33 @@
 # Eggspire 
 
-Eggspire is a small application that deletes expired Tweets from your Twitter
-account. (The main aim here was to gain some rust experience.) 
+Eggspire is a small tool that deletes expired tweets from your Twitter
+account. 
 
 
 ## Usage
 ```bash
 ./eggspire --help
-eggspire 1.0.2
+eggspire 1.1.0
 
-Deletes Tweets that are expired and not faved by the authenticated user.
-A Tweet has expired if it is older than a given timespan.
-
-CAUTION: Will delete Tweets without confirmation!
+Deletes tweets that are expired and not liked by the authenticated user and opionaly removes expired likes.
+A tweet or like has expired if it is older than a given timespan.
+CAUTION: Will delete tweets and remove likes without confirmation!
 
 USAGE:
-    eggspire [FLAGS] [OPTIONS] [<WEEKS>]
+    eggspire [FLAGS] [OPTIONS] [WEEKS]
 
 FLAGS:
-    -d, --dry-run    Checks only, does not delete any Tweets
-    -h, --help       Prints help information
-    -q, --quiet      Be quiet
-    -V, --version    Prints version information
+    -d, --dry-run          Checks only, does not delete any tweets / likes
+    -h, --help             Prints help information
+    -l, --include-likes    Remove expired likes from tweets of other users
+    -q, --quiet            Be quiet
+    -V, --version          Prints version information
 
 OPTIONS:
-    -a, --auth-file <FILE>    Path to a toml file with Twitter credentials
-                              [default: eggspire.toml]
+    -a, --auth-file <FILE>    Path to a toml file with Twitter credentials [default: eggspire.toml]
 
 ARGS:
     <WEEKS>    Timespan in weeks [default: 52]
-
 ```
 
 
